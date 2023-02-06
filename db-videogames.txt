@@ -1,0 +1,116 @@
+Table videogames {
+  id int [pk]
+  software_house_id foreign
+  name varchar(128)
+  plot text
+  release_date date
+}
+
+Table software_houses {
+  id int [pk]
+  name varchar(128)
+  p_IVA varchar(11)
+  city varchar(64)
+  nation varchar(64)
+}
+
+Table platforms {
+  id int [pk]
+  name varchar(32)
+}
+
+Table categories {
+  id int [pk]
+  name varchar(64)
+}
+
+Table classifications {
+  id int [pk]
+  PEGI varchar(16)
+  tags varchar(32)
+}
+
+Table tournaments {
+  id int [pk]
+  name varchar(128)
+  year year
+  city varchar(64)
+}
+
+Table players {
+  id int [pk]
+  name varchar(64)
+  surname varchar(64)
+  nickname varchar(64)
+  city varchar(64)
+}
+
+Table reviews {
+  id int [pk]
+  videogame_id foreign
+  player_id foreign
+  title varchar(32)
+  description text
+  rating tinyint(5)
+}
+
+Table rewards {
+  id int [pk]
+  name varchar(64)
+}
+
+
+// PIVOT TABLES
+
+Table platform_videogame {
+  platform_id foreign
+  videogame_id foreign
+}
+
+Table classification_videogame {
+  classification_id foreign
+  videogame_id foreign
+}
+
+Table category_videogame {
+  category_id foreign
+  videogame_id foreign
+}
+
+Table player_tournament {
+  player_id foreign
+  tournament_id foreign
+  subscribed boolean
+}
+
+Table reward_videogame {
+  reward_id foreign
+  videogame_id foreign
+  year year
+}
+
+Ref: "classifications"."id" < "classification_videogame"."classification_id"
+
+Ref: "classification_videogame"."videogame_id" > "videogames"."id"
+
+Ref: "categories"."id" < "category_videogame"."category_id"
+
+Ref: "category_videogame"."videogame_id" > "videogames"."id"
+
+Ref: "platform_videogame"."videogame_id" > "videogames"."id"
+
+Ref: "platform_videogame"."platform_id" > "platforms"."id"
+
+Ref: "reward_videogame"."videogame_id" > "videogames"."id"
+
+Ref: "reward_videogame"."reward_id" > "rewards"."id"
+
+Ref: "software_houses"."id" < "videogames"."id"
+
+Ref: "reviews"."videogame_id" > "videogames"."id"
+
+Ref: "reviews"."player_id" > "players"."id"
+
+Ref: "players"."id" < "player_tournament"."player_id"
+
+Ref: "player_tournament"."tournament_id" > "tournaments"."id"
